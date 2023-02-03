@@ -1,5 +1,8 @@
-html {
+html,
+body {
   font-family: sans-serif;
+  width: 100%;
+  margin: 0;
 }
 
 h1 {
@@ -13,8 +16,14 @@ table {
   border: 2px solid rgba(149, 149, 149, 0.549);
   letter-spacing: 1px;
   font-size: 0.8rem;
-  width: 90%;
   margin-bottom: 10px;
+  width: 80vw;
+  min-width: 800x;
+
+}
+
+.overflow-x {
+  overflow-x: auto;
 }
 
 td,
@@ -30,6 +39,7 @@ th {
 td {
   text-align: center;
 }
+
 
 th:first-child,
 td:first-child {
@@ -50,12 +60,12 @@ td:last-child {
 
 th:nth-last-child(2),
 th:nth-last-child(2) {
-  width: 8%;
+  width: 6%;
 }
 
 th:nth-last-child(3),
 th:nth-last-child(3) {
-  width: 9%;
+  width: 7%;
 }
 
 tr:nth-child(odd) td {
@@ -130,4 +140,36 @@ img.icon {
   flex-direction: row;
   justify-content: left;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 400px) {
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3),
+  th:nth-child(4),
+  td:nth-child(4),
+  th:nth-child(5),
+  td:nth-child(5),
+  th:nth-child(6),
+  td:nth-child(6),
+  th:nth-child(7),
+  td:nth-child(7) {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+
+  th:nth-child(3),
+  td:nth-child(3),
+  th:nth-child(6),
+  td:nth-child(6),
+  th:nth-child(7),
+  td:nth-child(7) {
+    display: none;
+  }
 }

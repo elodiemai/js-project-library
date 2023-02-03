@@ -1,57 +1,66 @@
 "use strict";
 
-let myLibrary = [];
 
-function Book(title, author, genre, numPages, publicationDate, isbn, available, due) {
-    this.title = title,
-        this.author = author,
-        this.genre = genre,
-        this.numPages = numPages,
-        this.publicationDate = publicationDate,
-        this.isbn = isbn,
-        this.available = available,
-        this.due = due
+class Book {
+    constructor(title, author, genre, numPages, publicationDate, isbn, available, due) {
+        this.title = title,
+            this.author = author,
+            this.genre = genre,
+            this.numPages = numPages,
+            this.publicationDate = publicationDate,
+            this.isbn = isbn,
+            this.available = available,
+            this.due = due
+    }
 }
 
-const libraryController = (() => {
-    const _initLibrary = (() => {
-        const book1 = new Book('The Well-Laden Ship', 'Egbert of Liege; Babcock, Robert Gary (Trans.)', 'Fantasy', 356, 2013, 9780674051270, 'Yes', '');
-        const book2 = new Book('Grimm\'s Fairy Tales', 'The Brother Grimms: Comb, Lorraine (Illust.)', 'Horror', 244, 2011, 133529543436, 'No', '2023-02-04');
-        const book3 = new Book('Dracula: Sense and Nonsense', 'Miller, Elizabeth; Leatherdale, Clive (Intro.)', 'Fiction', 256, 2011, 834529446456, 'No', '2023-01-30');
-        const book4 = new Book('Algonquin Cat', 'Shaffner, Val', 'Fiction', 67, 1980, 9780517147115, 'Yes', '');
-        const book5 = new Book('Reynard the Fox', 'Avery, Anne Louise', 'Comics', 256, 2020, 9781851245550, 'No', '2023-02-04');
-        const book6 = new Book('The Cat In The Hat Comes Back', 'SEUSS, Dr.', 'Comedy', 138, 1958, 3562502309847, 'No', '2023-02-12');
+class Library {
 
-        addBookToLibrary(book1);
-        addBookToLibrary(book2);
-        addBookToLibrary(book3);
-        addBookToLibrary(book4);
-        addBookToLibrary(book5);
-        addBookToLibrary(book6);
-    })();
-
-    function addBookToLibrary(book) {
-        myLibrary.push(book);
+    constructor() {
+        this.data = [];
+        this.numberOfBooks = 0;
     }
 
-    function removeBook(index) {
-        myLibrary.splice(index, 1);
+    initializeLibrary() {
+        let initialCollection =
+            [new Book('The Well-Laden Ship', 'Egbert of Liege; Babcock, Robert Gary (Trans.)', 'Fantasy', 356, 2013, 9780674051270, 'Yes', ''),
+            new Book('Grimm\'s Fairy Tales', 'The Brother Grimms: Comb, Lorraine (Illust.)', 'Horror', 244, 2011, 133529543436, 'No', '2023-02-04'),
+            new Book('Dracula: Sense and Nonsense', 'Miller, Elizabeth; Leatherdale, Clive (Intro.)', 'Fiction', 256, 2011, 834529446456, 'No', '2023-01-30'),
+            new Book('Algonquin Cat', 'Shaffner, Val', 'Fiction', 67, 1980, 9780517147115, 'Yes', ''),
+            new Book('Reynard the Fox', 'Avery, Anne Louise', 'Comics', 256, 2020, 9781851245550, 'No', '2023-02-04'),
+            new Book('The Cat In The Hat Comes Back', 'SEUSS, Dr.', 'Comedy', 138, 1958, 3562502309847, 'No', '2023-02-12')];
+
+        for (let i = 0; i < initialCollection.length; i++) {
+            this.addBookToLibrary(initialCollection[i]);
+            this.data[i] = initialCollection[i];
+        }
+        this.numberOfBooks = initialCollection.length;
+    }
+
+    addBookToLibrary(book) {
+        this.data[this.numberOfBooks] = book;
+        this.numberOfBooks++;
+    }
+
+    removeBook(index) {
+        this.data.splice(index, 1);
+        this.numberOfBooks--;
         displayController.updateTable();
     }
 
-    function markAvailable(index) {
-        myLibrary[index].available = 'Yes';
-        myLibrary[index].due = '';
+    markAvailable(index) {
+        this.data[index].available = 'Yes';
+        this.data[index].due = '';
         displayController.updateTable();
     }
+};
 
-    return {
-        addBookToLibrary,
-        removeBook,
-        markAvailable
-    }
 
-})();
+
+const library = new Library();
+library.initializeLibrary();
+
+
 
 const displayController = (() => {
 
@@ -73,7 +82,7 @@ const displayController = (() => {
 
         const thead = document.querySelector('thead');
 
-        for (let key in myLibrary[0]) {
+        for (let key of Object.keys(library.data[0])) {
             const th = document.createElement('th');
             th.innerText = displayFields[key] ?? key;
             thead.appendChild(th);
@@ -102,7 +111,7 @@ const displayController = (() => {
         tbody.parentNode.removeChild(tbody);
         const table = document.querySelector('table');
         table.appendChild(document.createElement('tbody'));
-        myLibrary.map((book, i) => _addToTable(book, i));
+        Object.values(library.data).map((book, i) => _addToTable(book, i));
     };
 
     function _addToTable(book, index) {
@@ -120,13 +129,13 @@ const displayController = (() => {
 
         removeButton.innerText = 'Remove';
         removeButton.classList.add('remove-btn');
-        removeButton.addEventListener('click', () => libraryController.removeBook(index));
+        removeButton.addEventListener('click', () => library.removeBook(index));
         const markAvailableBtn = document.createElement('button');
 
         const mark_td = document.createElement('td');
         markAvailableBtn.innerText = 'Mark Available';
         markAvailableBtn.classList.add('avail-btn');
-        markAvailableBtn.addEventListener('click', () => libraryController.markAvailable(index));
+        markAvailableBtn.addEventListener('click', () => library.markAvailable(index));
 
         tr.appendChild(mark_td);
         tr.appendChild(remove_td);
@@ -171,7 +180,7 @@ const displayController = (() => {
             due
         );
 
-        libraryController.addBookToLibrary(book);
+        library.addBookToLibrary(book);
         updateTable();
     }
 
